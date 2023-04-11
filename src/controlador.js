@@ -16,6 +16,11 @@ const cadastrar = async (req, res) => {
   }
 
   try {
+    const emailExiste = await knex('users').where({ email }).first()
+
+    if (emailExiste) {
+      return res.status(400).json('O email já está cadastrado')
+    }
     const usuario = await knex('users').insert({ nome, email }).returning('*')
 
     if (!usuario) {
